@@ -287,6 +287,9 @@ public class TamingManager extends SkillManager {
         double range = 5;
         Player player = getPlayer();
 
+        if (!target.getWorld().equals(player.getWorld()))
+            return;
+
         for (Entity entity : player.getNearbyEntities(range, range, range)) {
             if (entity.getType() != EntityType.WOLF) {
                 continue;
@@ -399,6 +402,7 @@ public class TamingManager extends SkillManager {
         callOfWildEntity.setCustomName(LocaleLoader.getString("Taming.Summon.Name.Format", getPlayer().getName(), StringUtils.getPrettyEntityTypeString(EntityType.WOLF)));
     }
 
+    @SuppressWarnings("deprecation")
     private void spawnCat(Location spawnLocation, EntityType entityType) {
         LivingEntity callOfWildEntity = (LivingEntity) getPlayer().getWorld().spawnEntity(spawnLocation, entityType);
 
@@ -411,14 +415,12 @@ public class TamingManager extends SkillManager {
 
         //Randomize the cat
         if (callOfWildEntity instanceof Ocelot) {
+            // Ocelot.Type is deprecated, but that's fine since this only runs on 1.13
             int numberOfTypes = Ocelot.Type.values().length;
             ((Ocelot) callOfWildEntity).setCatType(Ocelot.Type.values()[Misc.getRandom().nextInt(numberOfTypes)]);
-            ((Ocelot) callOfWildEntity).setAdult();
-        } else if (callOfWildEntity instanceof Cat) {
-            int numberOfTypes = Cat.Type.values().length;
-            ((Cat) callOfWildEntity).setCatType(Cat.Type.values()[Misc.getRandom().nextInt(numberOfTypes)]);
-            ((Cat) callOfWildEntity).setAdult();
         }
+
+        ((Ageable) callOfWildEntity).setAdult();
 
         callOfWildEntity.setCustomName(LocaleLoader.getString("Taming.Summon.Name.Format", getPlayer().getName(), StringUtils.getPrettyEntityTypeString(entityType)));
 
