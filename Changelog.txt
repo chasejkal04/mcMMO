@@ -10,6 +10,7 @@ Version 2.2.052
     Fixed bug where Smelting Vanilla XP multiplier was not using Skills.Smelting.VanillaXPMultiplier values from advanced.yml
     Fixed Fishing skill only working with main-hand fishing rod when fishing
     Fixed bug where Block Cracker (Unarmed/Berserk) had no effect on deepslate_bricks, deepslate_tiles, polished_blackstone_bricks, and nether_bricks
+    Fixed Verdant Bounty (Herbalism) never triggering triple drops — the subskill was defined and displayed but was never checked during block break processing
     Fixed bug where mob custom names could be permanently corrupted after healthbar display (see notes)
     Fixed bug where vanilla mobs (null custom name) had their name incorrectly restored as an empty string instead of null after healthbar display
     Fixed bug where hitting a mob multiple times during the healthbar display window caused the name to restore too early (see notes)
