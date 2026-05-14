@@ -161,16 +161,19 @@ public class BlockListener implements Listener {
 
             // Excavation treasure injection — rolls happen here so drops enter the
             // BlockDropItemEvent item list and are visible to Telekinesis-style enchant plugins.
+            // block.getType() is AIR by event time; event.getBlockState() holds the pre-break
+            // snapshot, so we unwrap its material once here and thread it through.
+            final Material excavationBlockMaterial = event.getBlockState().getType();
             final Player excavationPlayer = event.getPlayer();
             final McMMOPlayer excavationMmoPlayer = UserManager.getPlayer(excavationPlayer);
             if (excavationMmoPlayer != null
-                    && BlockUtils.affectedByGigaDrillBreaker(block)
+                    && BlockUtils.affectedByGigaDrillBreaker(excavationBlockMaterial)
                     && ItemUtils.isShovel(excavationPlayer.getInventory().getItemInMainHand())
                     && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(
                             excavationPlayer, PrimarySkillType.EXCAVATION)
                     && !mcMMO.getUserBlockTracker().isIneligible(block)) {
                 final List<ItemStack> treasureDrops = excavationMmoPlayer.getExcavationManager()
-                        .rollAndCollectTreasureDrops(block);
+                        .rollAndCollectTreasureDrops(block, excavationBlockMaterial);
                 if (!treasureDrops.isEmpty()) {
                     final World blockWorld = block.getWorld();
                     final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
